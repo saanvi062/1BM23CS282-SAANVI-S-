@@ -1,0 +1,69 @@
+int twoStacks(int maxSum, int a_count, int* a, int b_count, int* b) {
+    int total = 0, count = 0;
+    int i = 0; // Pointer for stack A
+    int j = 0; // Pointer for stack B
+
+    // Calculate the initial sum of elements taken from stack A
+    while (i < a_count && total + a[i] <= maxSum) {
+        total += a[i];
+        i++;
+    }
+
+    count = i; // The maximum elements taken from A so far
+
+    // Now we try to take elements from stack B
+    while (j < b_count && i >= 0) {
+        total += b[j]; // Take one more element from stack B
+        j++;
+
+        // Check if total exceeds maxSum
+        while (total > maxSum && i > 0) {
+            i--;
+            total -= a[i];
+        }
+
+        // Update count if the current total is within maxSum
+        if (total <= maxSum) {
+            count = (i + j); // i is the number of elements from A, j from B
+        }
+    }
+
+    return count;
+}
+
+int main() {
+    FILE* fptr = fopen(getenv("OUTPUT_PATH"), "w");
+
+    int g = parse_int(ltrim(rtrim(readline())));
+
+    for (int g_itr = 0; g_itr < g; g_itr++) {
+        char** first_multiple_input = split_string(rtrim(readline()));
+
+        int n = parse_int(*(first_multiple_input + 0));
+        int m = parse_int(*(first_multiple_input + 1));
+        int maxSum = parse_int(*(first_multiple_input + 2));
+
+        char** a_temp = split_string(rtrim(readline()));
+        int* a = malloc(n * sizeof(int));
+        for (int i = 0; i < n; i++) {
+            int a_item = parse_int(*(a_temp + i));
+            *(a + i) = a_item;
+        }
+
+        char** b_temp = split_string(rtrim(readline()));
+        int* b = malloc(m * sizeof(int));
+        for (int i = 0; i < m; i++) {
+            int b_item = parse_int(*(b_temp + i));
+            *(b + i) = b_item;
+        }
+
+        int result = twoStacks(maxSum, n, a, m, b);
+        fprintf(fptr, "%d\n", result);
+
+        free(a);
+        free(b);
+    }
+
+    fclose(fptr);
+    return 0;
+}
