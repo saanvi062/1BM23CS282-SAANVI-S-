@@ -1,0 +1,212 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node {
+    int data;
+    struct node* next;
+    struct node* prev;
+} Node;
+
+Node* head = NULL;  // Initialize the head of the list
+
+// Function to create a doubly linked list
+void create() {
+    int n, data;
+    printf("Enter the number of nodes: ");
+    scanf("%d", &n);
+    Node* temp = NULL;
+    
+    for (int i = 0; i < n; i++) {
+        Node* newNode = (Node*)malloc(sizeof(Node));
+        printf("Enter data for node %d: ", i + 1);
+        scanf("%d", &data);
+        newNode->data = data;
+        newNode->next = NULL;
+        newNode->prev = NULL;
+
+        if (head == NULL) {
+            head = newNode;
+            temp = head;
+        } else {
+            temp->next = newNode;
+            newNode->prev = temp;
+            temp = newNode;
+        }
+    }
+}
+
+// Function to insert a new node to the left of a specific node
+void insertLeft(int value, int newData) {
+    Node* temp = head;
+    while (temp != NULL && temp->data != value) {
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        printf("Node with value %d not found.\n", value);
+        return;
+    }
+
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = newData;
+    newNode->next = temp;
+    newNode->prev = temp->prev;
+
+    if (temp->prev != NULL) {
+        temp->prev->next = newNode;
+    } else {
+        head = newNode; // Update head if inserting before the first node
+    }
+    temp->prev = newNode;
+
+    printf("Node with data %d inserted to the left of %d.\n", newData, value);
+}
+
+// Function to delete a node based on its value
+void deleteNode(int value) {
+    Node* temp = head;
+    while (temp != NULL && temp->data != value) {
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        printf("Node with value %d not found.\n", value);
+        return;
+    }
+
+    if (temp->prev != NULL) {
+        temp->prev->next = temp->next;
+    } else {
+        head = temp->next; // Update head if the first node is deleted
+    }
+
+    if (temp->next != NULL) {
+        temp->next->prev = temp->prev;
+    }
+
+    free(temp);
+    printf("Node with value %d deleted.\n", value);
+}
+
+// Function to display the contents of the list
+void display() {
+    Node* temp = head;
+    if (temp == NULL) {
+        printf("The list is empty.\n");
+        return;
+    }
+
+    printf("List contents: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    int choice, value, newData;
+
+    while (1) {
+        printf("\nDoubly Linked List Menu:\n");
+        printf("1. Create list\n");
+        printf("2. Insert to the left of a node\n");
+        printf("3. Delete a node by value\n");
+        printf("4. Display list\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                create();
+                break;
+            case 2:
+                printf("Enter the value of the node to insert left of: ");
+                scanf("%d", &value);
+                printf("Enter the data for the new node: ");
+                scanf("%d", &newData);
+                insertLeft(value, newData);
+                break;
+            case 3:
+                printf("Enter the value of the node to delete: ");
+                scanf("%d", &value);
+                deleteNode(value);
+                break;
+            case 4:
+                display();
+                break;
+            case 5:
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+
+    return 0;
+}
+
+
+OUTPUT:
+Doubly Linked List Menu:
+1. Create list
+2. Insert to the left of a node
+3. Delete a node by value
+4. Display list
+5. Exit
+Enter your choice: 1
+Enter the number of nodes: 4
+Enter data for node 1: 2
+Enter data for node 2: 3
+Enter data for node 3: 4
+Enter data for node 4: 5
+
+Doubly Linked List Menu:
+1. Create list
+2. Insert to the left of a node
+3. Delete a node by value
+4. Display list
+5. Exit
+Enter your choice: 2
+Enter the value of the node to insert left of: 3
+Enter the data for the new node: 8
+Node with data 8 inserted to the left of 3.
+
+Doubly Linked List Menu:
+1. Create list
+2. Insert to the left of a node
+3. Delete a node by value
+4. Display list
+5. Exit
+Enter your choice: 4
+List contents: 2 8 3 4 5 
+
+Doubly Linked List Menu:
+1. Create list
+2. Insert to the left of a node
+3. Delete a node by value
+4. Display list
+5. Exit
+Enter your choice: 3
+Enter the value of the node to delete: 3
+Node with value 3 deleted.
+
+Doubly Linked List Menu:
+1. Create list
+2. Insert to the left of a node
+3. Delete a node by value
+4. Display list
+5. Exit
+Enter your choice: 4
+List contents: 2 8 4 5 
+
+Doubly Linked List Menu:
+1. Create list
+2. Insert to the left of a node
+3. Delete a node by value
+4. Display list
+5. Exit
+Enter your choice: 5
+
+
+=== Code Execution Successful ===
